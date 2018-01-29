@@ -32,6 +32,11 @@ comming soon!
 
 ## Download the data
 
+The 230 / 2,260 companies are annotated (10% of all company).  
+The annotation target companies are selected from each category. Please refer the detail from here.
+
+[Annotation Target](https://docs.google.com/spreadsheets/d/1i1y1Z5TwnKBOJ8fFLZ0D3p6dAG1zxYBRbUXumn0q10M/edit#gid=0)
+
 comming soon!
 
 
