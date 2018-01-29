@@ -16,11 +16,11 @@ Aspectは、EntityとAttributeのセットで定義される。上記の場合�
 
 Targetは、Entityの具体的な記述となる(E#Aペアの**E**に相当)。
 
-各E#Aペアは、極性を持つ。極性は(`positive`,`negative`,`neutral`)の中から設定される。Sentimentが読み取れるがpositiveともnegativeともはっきり言えない場合`neutral`を付与する。
+各E#Aペアは、極性を持つ。極性は(`positive`,`negative`,`neutral`)の中から設定される。Sentimentが読み取れるがpositiveともnegativeともはっきり言えない場合`neutral`を付与する。
 
 * 本社の業績は好調であった: `positive`
 * 本社の業績は下降気味であった: `negative`
-* 本社の業績は前年並みであった、不透明である: `neutral`
+* 本社の業績は前年並みであった、不透明である: `neutral`
 * 本社の売上は100億円だった: {}  # どんな極性もよみとれない
 
 このアノテーションは文単位で行われるもので、他の文のEntityを参照したり、他の文のSentimentの考慮といったことは行わない。あくまで、提示された一文内でE#Aペア、極性を判断することとする。
@@ -45,7 +45,7 @@ Entity、およびAttributeの種類は以下とする。
 * market: 生鮮食品市場・原油市況といった、市場、市況を表す語
 * company: 会社/法人、グループを表す語
 * business: 機械部品部門・国内事業など、会社内の部門、事業部、事業領域を表す語
-* product: エンジン・バイク、工場建設・プリントサービスといった、製品、またサービスの名称を表す語
+* product: エンジン・バイク、工場建設・プリントサービスといった、製品、またサービスの名称を表す語
 
 **Attribute**
 
@@ -106,7 +106,7 @@ Entity、およびAttributeの種類は以下とする。
 * エリンギ: `product#amount, positive`
 * マイタケ: `product#amount, positive`
 
-### Handling Missing E#A
+### E#Aのいずれかの欠損について
 
 positive/negativeの判定が可能だが、Entity/Attributeが特定できない場合は以下の基準に準ずる。
 
