@@ -4,21 +4,30 @@ Reference from [SemEval-2016 Task 5](http://alt.qcri.org/semeval2016/task5/data/
 
 ## アノテーションの概要
 
-有価証券報告書について、極性(Sentiment)、およびその対象(Target)と観点(Aspect)をアノテーションする。
+有価証券報告書について、極性(Sentiment)、およびその対象(Target)と観点(Aspect)をアノテーションすることが目的となる。
 
 例: 株式会社ガンバルの売り上げは、好調だった。
 
 * Target: 株式会社ガンバル
 * Aspect: Entity=`company`、Attribute=`sales`
-* Sentiment: positive
+* Sentiment: `positive`
 
-Aspectは、EntityとAttributeのセットで与えられる。この場合、「株式会社ガンバル」のEntityは会社(`company`)であり、その属性のうちの一つである売上(`sales`)が観点、Aspectとなる。
+Aspectは、EntityとAttributeのセットで定義される。上記の場合、Entity=`company`、Attribute=`sales`となる。EntityとAttributeは、事前に定義されたいくつかの種類の中から選択式で設定される。例えば、Entityは`company`や`product`、Attributeは`sales`や`profit`などのカテゴリから設定される。このE#Aペアが「観点」となる。
 
-* Sentimentが読み取れるがpositiveともnegativeとも言えない場合`neutral`を付与する。
+Targetは、Entityの具体的な記述となる(E#Aペアの**E**に相当)。
 
-### アノテーション要素の定義
+各E#Aペアは、極性を持つ。極性は(`positive`,`negative`,`neutral`)の中から設定される。Sentimentが読み取れるがpositiveともnegativeともはっきり言えない場合`neutral`を付与する。
 
-## Targetの定義
+* 本社の業績は好調であった: `positive`
+* 本社の業績は下降気味であった: `negative`
+* 本社の業績は前年並みであった、不透明である: `neutral`
+* 本社の売上は100億円だった: {}  # どんな極性もよみとれない
+
+このアノテーションは文単位で行われるもので、他の文のEntityを参照したり、他の文のSentimentの考慮といったことは行わない。あくまで、提示された一文内でE#Aペア、極性を判断することとする。
+
+## アノテーション要素の定義
+
+### Targetの定義
 
 Targetとして指定するのは、固有表現、もしくは固有表現と認識されうる名詞/名詞の連続を対象とする(=「の」などで連携されるものは対象とならない)。
 
@@ -27,58 +36,28 @@ Targetとして指定するのは、固有表現、もしくは固有表現と�
 * 国内、中国、EMEAの中小型の減・変速機の市況
   * 「市況」がEntity
 
-## Aspectの定義
+### Aspectの定義
 
 Entity、およびAttributeの種類は以下とする。
 
 **Entity**
 
-* market: 市場
-* company: 会社/法人、グループ
-* business: 会社内の事業部、事業領域
-* product: 製品、またサービス
+* market: 生鮮食品市場・原油市況といった、市場、市況を表す語
+* company: 会社/法人、グループを表す語
+* business: 機械部品部門・国内事業など、会社内の部門、事業部、事業領域を表す語
+* product: エンジン・バイク、工場建設・プリントサービスといった、製品、またサービスの名称を表す語
 
 **Attribute**
 
-* sales: 売上
-* profit: 利益
-* amount: 販売数量、生産数量など
+* sales: 売上を表す語
+* profit: 利益を表す語
+* amount: 販売数量、生産数量などを表す語
   * 企業がアウトプットする量。つまり、需要はこれに当たらない。ただ、生産量とほぼ同じ意味で使われることがあるので、これは文脈から判断する。
-* price: 販売単価
+* price: 野菜価格、製品価格といった販売単価を表す語
   * 販売価格についての言及に付与する。「原料価格」はcostとして扱う
-* cost: 原価
+* cost: 売上原価、労務費といった原価を表す語
 
-positive/negativeの判定が可能だが、Entity/Attributeが特定できない場合は以下の基準に準ずる。
-
-|               | Attribute: あり      | Attribute: 対象外    |
-|---------------|----------------------|----------------------|
-| Entity: あり  | (通常)               | (Entityタグ)#general |
-| Entity:なし   | NULL#(Attributeタグ) | NULL#general         |
-| Entity:対象外 | OOD#general          | OOD#general          |
-
-* Entityなし、Attributeあり => Entityに`NULL`を指定し、TargetはAttributeを選択する
-  * 例: 「売上高は15%増加しました」 `sales`の判定が可能だが、Entityがない
-  * `NULL#sales`となり、*Targetは`売上高`を選択する*
-* Entityあり、Attributeなし=Attributeが対象外
-  * positive/negativeの判定ができるということはAttributeがないわけではなく対象外、というケースになる。
-  * 例: 「音楽事業部は好調だ」 `business`のEntityがあるが、該当するAttributeがない
-  * この場合、Attributeに`general`を使用し`business#general, positive`とする
-* Entityなし、Attributeなし(=対象外)
-  * Entityがなく、対象外のAttributeのみある場合はアノテーションを行なっていない
-  * 例: 「このような取り組みの結果、好調な結果となった」
-  * この場合、Entityに`NULL`、Attributeに`general`を選択し、TargetはAttributeの表現を選択する
-  * `NULL#general`、*Target=`好調`*。対象表現は、形態素解析の結果に基づき該当の一要素を指定する。
-* Entityなし(=対象外)、Attributeあり/Attributeなし(=対象外)
-  * Entityが何らかの形で特定できる場合は`OOD`(Out of Domain)を指定する。
-  * OODの場合、Attributeの有無にかかわらず`general`でpositive/negativeのみアノテートする
-
-一文に、同じEntityに対し複数のAttributeが登場する場合は同じTargetに対し複数回アノテーションを行う。
-
-* 株式会社ガンバルの売り上げ、利益はともに向上した
-  * 株式会社ガンバル/売り上げ/向上した: `company#sales, positive`
-  * 株式会社ガンバル/利益/向上した: `company#profit, positive`
-
-## Sentimentの定義
+### Sentimentの定義
 
 結果のみを対象にする
 
@@ -94,26 +73,7 @@ positive/negativeの判定が可能だが、Entity/Attributeが特定できな�
 
 極性の判定は、文単位で行う。前後の文脈からpositiveだと推定できても、その文ではnegativeならnegativeとする。
 
-## アノテーションガイド
-
-1. 一文の中で極性が現れている箇所を特定する。
-   * 極性の表現が対象のAttributeでない場合、Attributeは`general`とする
-2. 主語がない場合、Entityは`NULL`としTargetとしてAttributeに関する記述(売上、利益etc)を指定する
-3. 主語があるがアノテーション対象でない場合、Entityは`OOD`としAttributeは`general`で極性のみアノテーションする 
-4. 主語がある場合、その主語を`Target`とする。
-   * 直接の主語をとるよう注意する: *「調理冷凍食品事業ではエビ加工品やかに風味かまぼこの販売が伸長しました」では、販売が伸長したのはエビ&カニ風味で、事業でない*
-   * 固有表現と認識される名詞/連続した名詞を対象とする: *`二輪車向けエンジン`など、途中で接尾辞(向け)が入っているケースがあるので、注意する。この場合は、`エンジン`が対象になる*。ただ、事業部名や特定製品名など、会社の中でそれを一語の固有表現として扱っている場合はそれを優先する
-   * 「国内事業部収入」や「音楽製品売上」といった、EntityとAttributeが結合したような語は、「国内事業部収入」(Entityなし、Attribute`sales`)で一語とし、語内でEntity(国内事業部)/Attribute(収入)を分割しない。
-5. 主語が複数ある場合は、それぞれにアノテーションを行う。
-   * 例示、列挙については各語をTargetとする: *「エビやかまぼこの売上が上がった」 => エビ、かまぼこ双方がTarget*
-   * 代表例の提示については、例示の方が主体か、その後の集合の方が主体か、文脈から判断する: *「ワンピースやNARUTOといった、日本アニメコンテンツの販売が好調だった。」=>日本アニメコンテンツ全体ではなく、ワンピース、NARUTOが好調の主体と思える。これに対し、ワンピースやNARUTOを含む、日本アニメコンテンツの販売が好調だった。」場合、日本アニメコンテンツが主体となる*。
-   * ・や、でつなげられているもので、独立しているものは分割する(「エビ・タイは何れも好調だった=>「エビ」「タイ」)。ただし、「麺・米飯類など」というように「麺・米飯類」で一語になっている場合(「麺・米飯類」)は分割しない
-   * 語尾が「など/等/全体」で終わる場合(「冷凍魚・エビなど」)についても、分割を行い、など/等/全体はとる。
-6. なお、個別でなく同一の`Target`が複数回登場する場合は、より具体的な表現、最初に登場したものを優先する
-   * 具体的な記述を優先する: *「金融商品部門での売上はマイナスとなったが、これは同部門における人件費の高騰が理由である」=>「金融商品部門」「同部門」では、具体的な「金融商品部門」を優先*
-   * 同一の具体性の場合、初出を優先する: *「**ガンバル**の売り上げは向上したため、ガンバルの利益もまた向上しました」=>同一の具体性であれば、最初に登場したガンバルをTargetとみなす*
-
-## Examples
+### Examples
 
 **market**
 
@@ -145,6 +105,58 @@ positive/negativeの判定が可能だが、Entity/Attributeが特定できな�
 * ブナシメジ: `product#amount, positive`
 * エリンギ: `product#amount, positive`
 * マイタケ: `product#amount, positive`
+
+### Handling Missing E#A
+
+positive/negativeの判定が可能だが、Entity/Attributeが特定できない場合は以下の基準に準ずる。
+
+|               | Attribute: あり      | Attribute: 対象外    |
+|---------------|----------------------|----------------------|
+| Entity: あり  | (通常)               | (Entityタグ)#general |
+| Entity:なし   | NULL#(Attributeタグ) | NULL#general         |
+| Entity:対象外 | OOD#general          | OOD#general          |
+
+* Entityなし、Attributeあり => Entityに`NULL`を指定し、TargetはAttributeを選択する
+  * 例: 「売上高は15%増加しました」 `sales`の判定が可能だが、Entityがない
+  * `NULL#sales`となり、*Targetは`売上高`を選択する*
+* Entityあり、Attributeなし=Attributeが対象外
+  * positive/negativeの判定ができるということはAttributeがないわけではなく対象外、というケースになる。
+  * 例: 「音楽事業部は好調だ」 `business`のEntityがあるが、該当するAttributeがない
+  * この場合、Attributeに`general`を使用し`business#general, positive`とする
+* Entityなし、Attributeなし(=対象外)
+  * Entityがなく、対象外のAttributeのみある場合はアノテーションを行なっていない
+  * 例: 「このような取り組みの結果、好調な結果となった」
+  * この場合、Entityに`NULL`、Attributeに`general`を選択し、TargetはAttributeの表現を選択する
+  * `NULL#general`、*Target=`好調`*。対象表現は、形態素解析の結果に基づき該当の一要素を指定する。
+* Entityなし(=対象外)、Attributeあり/Attributeなし(=対象外)
+  * Entityが何らかの形で特定できる場合は`OOD`(Out of Domain)を指定する。
+  * OODの場合、Attributeの有無にかかわらず`general`でpositive/negativeのみアノテートする
+
+一文に、同じEntityに対し複数のAttributeが登場する場合は同じTargetに対し複数回アノテーションを行う。
+
+* 株式会社ガンバルの売り上げ、利益はともに向上した
+  * 株式会社ガンバル/売り上げ/向上した: `company#sales, positive`
+  * 株式会社ガンバル/利益/向上した: `company#profit, positive`
+
+## アノテーションガイド
+
+1. 一文の中で極性が現れている箇所を特定する。
+   * 極性の表現が対象のAttributeでない場合、Attributeは`general`とする
+2. 主語がない場合、Entityは`NULL`としTargetとしてAttributeに関する記述(売上、利益etc)を指定する
+3. 主語があるがアノテーション対象でない場合、Entityは`OOD`としAttributeは`general`で極性のみアノテーションする 
+4. 主語がある場合、その主語を`Target`とする。
+   * 直接の主語をとるよう注意する: *「調理冷凍食品事業ではエビ加工品やかに風味かまぼこの販売が伸長しました」では、販売が伸長したのはエビ&カニ風味で、事業でない*
+   * 固有表現と認識される名詞/連続した名詞を対象とする: *`二輪車向けエンジン`など、途中で接尾辞(向け)が入っているケースがあるので、注意する。この場合は、`エンジン`が対象になる*。ただ、事業部名や特定製品名など、会社の中でそれを一語の固有表現として扱っている場合はそれを優先する
+   * 「国内事業部収入」や「音楽製品売上」といった、EntityとAttributeが結合したような語は、「国内事業部収入」(Entityなし、Attribute`sales`)で一語とし、語内でEntity(国内事業部)/Attribute(収入)を分割しない。
+5. 主語が複数ある場合は、それぞれにアノテーションを行う。
+   * 例示、列挙については各語をTargetとする: *「エビやかまぼこの売上が上がった」 => エビ、かまぼこ双方がTarget*
+   * 代表例の提示については、例示の方が主体か、その後の集合の方が主体か、文脈から判断する: *「ワンピースやNARUTOといった、日本アニメコンテンツの販売が好調だった。」=>日本アニメコンテンツ全体ではなく、ワンピース、NARUTOが好調の主体と思える。これに対し、ワンピースやNARUTOを含む、日本アニメコンテンツの販売が好調だった。」場合、日本アニメコンテンツが主体となる*。
+   * ・や、でつなげられているもので、独立しているものは分割する(「エビ・タイは何れも好調だった=>「エビ」「タイ」)。ただし、「麺・米飯類など」というように「麺・米飯類」で一語になっている場合(「麺・米飯類」)は分割しない
+   * 語尾が「など/等/全体」で終わる場合(「冷凍魚・エビなど」)についても、分割を行い、など/等/全体はとる。
+6. なお、個別でなく同一の`Target`が複数回登場する場合は、より具体的な表現、最初に登場したものを優先する
+   * 具体的な記述を優先する: *「金融商品部門での売上はマイナスとなったが、これは同部門における人件費の高騰が理由である」=>「金融商品部門」「同部門」では、具体的な「金融商品部門」を優先*
+   * 同一の具体性の場合、初出を優先する: *「**ガンバル**の売り上げは向上したため、ガンバルの利益もまた向上しました」=>同一の具体性であれば、最初に登場したガンバルをTargetとみなす*
+
 
 ## アノテーションデータフォーマット
 
