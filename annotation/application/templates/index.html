@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block title %}Annotation Man{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="static/css/index.css">
+{% endblock %}
+
+{% block content %}
+<div id="app" class="container">
+    <nav class="navbar" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+            <div v-if="selectedItemId" v-cloak>
+                <p style="margin-left:10px;">
+                    <span class="title is-4">[[task.header.document_name]]:</span><span class="subtitle is-4">[[task.header.document_id]]</span>
+                </p>
+            </div>
+            <div v-else>
+                <p style="margin-left:10px;">
+                    <span class="title is-4">DocumentName:</span><span class="subtitle is-4">ID</span>
+                </p>
+            </div>
+                
+            <button class="button navbar-burger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+        <div class="navbar-menu">
+            <div class="navbar-start" style="margin-left: 10px">
+                <div>
+                    {% if current_user.is_authenticated %}
+                        <a class="button" href="/logout">Logout: {{ current_user.id }}</a>
+                    {% else %}
+                        <a class="button" href="/logout">Logout: Anonymous</a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="navbar-end">
+                <div class="field is-grouped">
+                    <p class="control" style="margin-right:20px;">
+                        <input class="input is-rounded" type="text" placeholder="match query" v-model="matchQuery">
+                    </p>
+                    <div class="control">
+                        <h6 class="title is-6" style="line-height: 30px;">[[doneCount]]/[[totalCount]]</h6>
+                    </div>
+                    <p class="control" style="margin-top: 4px;">
+                        <label class="checkbox">
+                            <input type="checkbox" v-model="doneFilter"><span>Show Done</span>
+                        </label>
+                    </p>
+                    <p class="control">
+                        <a class="button" v-on:click="saveAnnotation" v-bind:disabled="!updated">
+                            <span class="icon">
+                                <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                            </span>
+                            <span>Save Annotation</span>
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="columns">
+        <div id="item-list" class="column is-1" v-cloak>
+            <div v-bind:id="d.edi_id" v-bind:class="itemClass(d.edi_id)" v-on:click="selectItem(d.edi_id)" v-for="d in selectedDocuments">
+                <span>[[d.edi_id]]</span>
+                <span class="icon has-text-success" v-if="d.done">
+                    <i class="fa fa-check-square"></i>
+                </span>
+            </div>
+        </div>
+        <div id="selected-item" class="column is-11">
+            <div v-if="selectedItemId" v-cloak>
+                <!-- Header & Annotation Panels -->
+                <div>
+                    <div v-for="(groupedLabels, labelGroup, index) in labels">
+                        <h5 class="title is-6" style="float:left; width:80px">[[labelGroup]]</h5>
+                        <div class="buttons" style="margin-bottom:0px">
+                            <p class="control" v-for="label in groupedLabels">
+                                <a class="button label-button is-link" v-bind:style="label.display_style" 
+                                v-bind:data-labelid="label.label" 
+                                v-bind:data-groupid="index"
+                                v-on:click="annotate" tabindex="0">[[label.display_name]]</a>
+                            </p>
+                        </div>
+                        <div style="clear:both"/>
+                    </div>            
+                </div>
+                <hr/>
+                <!-- Body Panels -->
+                <div id="text-area">
+                    <div v-for="(t, t_id) in task.tasks" class="task" v-on:mousedown="setTarget(t_id)">
+                        <span v-html="$options.filters.highlight(t.target, matchQuery)"></span>
+                        <br/>
+                        <br v-if="t.annotations.length > 0"/>
+                        <div v-for="a in t.annotations">
+                            <span v-bind:style="getAnnotationLabelStyle(a)">[[a.label]]</span>
+                            <span>[[a.label_target]]</span>
+                            <button class="delete" v-on:click="deleteAnnotation(t_id, a)"/>
+                        </div>
+                        <hr style="border-top: 1px dashed whitesmoke;"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="static/js/index.js"></script>
+{% endblock %}

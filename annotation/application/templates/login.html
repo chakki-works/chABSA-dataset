@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <h1 class="title">Annotell Login</h1>
+    
+    <form action="/login" method="POST">
+        <div class="field">
+            <p class="control has-icons-left has-icons-right">
+            <input class="input" name="user_id" placeholder="UserId">
+            <span class="icon is-small is-left">
+                <i class="fa fa-user"></i>
+            </span>
+            </p>
+        </div>
+        <div class="field">
+            <p class="control has-icons-left">
+            <input class="input" type="password" name="password" placeholder="Password">
+            <span class="icon is-small is-left">
+                <i class="fa fa-lock"></i>
+            </span>
+            </p>
+        </div>
+        <hr/>
+        <div>
+            <input class="button" type="submit" value="Login">
+            {% if error %}
+                <p style="color:#ff3860">Login Failed!</p>
+            {% endif %}
+        </div>
+    </form>
+</div>
+
+{% endblock %}

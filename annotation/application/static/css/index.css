@@ -1,0 +1,42 @@
+#app{
+    margin: 20px;
+}
+#item-list{
+    max-height: 790px;
+    overflow-y: scroll;
+}
+.item {
+    padding: 10px;
+    border: 1px solid silver;
+    border-radius: 5px;
+    margin-bottom: 5px;
+    max-width: 160px;
+}
+.item-active{
+    background-color: aliceblue;
+}
+.label-button{
+    margin: 5px;
+    font-size: 0.8em;
+}
+.label-button:focus{
+    border-radius: 20px;
+}
+.label-title{
+    margin-right: 15px;
+    margin-left: 10px;
+}
+.task{
+    margin-bottom: 15px;
+}
+#text-area{
+    height: 530px;
+    overflow-y: scroll;
+}
+.highlight{
+    background-color: gold;
+    border-radius: 5px;
+}
+[v-cloak] {
+    display: none;
+}

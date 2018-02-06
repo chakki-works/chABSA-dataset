@@ -1,0 +1,11 @@
+beautifulsoup4>=4.6.0
+lxml>=4.1.1
+Flask>=0.12.2
+Flask-Login>=0.4.1
+requests>=2.18.4
+tqdm>=4.19.5
+Janome>=0.3.6
+numpy>=1.13.3
+scikit-learn>=0.19.1
+scipy>=1.0.0
+gunicorn>=19.7.1
