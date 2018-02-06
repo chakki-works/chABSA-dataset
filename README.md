@@ -17,6 +17,7 @@ The annotation target is "overview of business result" of each companies. Specif
 | business | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | product  | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | NULL     | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+| OOD      | :heavy_check_mark: |                    |                    |                    |                    |                    |
 
 To see the detail definition, please refer [annotation guideline](https://github.com/chakki-works/chABSA-dataset/tree/master/annotation/doc).
 
