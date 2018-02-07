@@ -1,5 +1,5 @@
 import os
-import re
+import argparse
 from collections import OrderedDict
 from bs4 import BeautifulSoup
 from tqdm import tqdm
@@ -38,6 +38,7 @@ def get_tag(root, tag, as_html=False):
 
 
 def main(data_root, extracted_folder, tag_name):
+    print("Now extract {}".format(tag_name))
     xbrl_paths = [get_xbrl_file(os.path.join(data_root, _dir)) for _dir 
                   in os.listdir(data_root) if _dir.startswith("E")]
     xbrl_paths = [p for p in xbrl_paths if p]
@@ -102,15 +103,24 @@ def main(data_root, extracted_folder, tag_name):
 
 
 if __name__ == "__main__":
-    # todo: get tag name from command line argument
-    tag_name = "jpcrp_cor:OverviewOfBusinessResultsTextBlock"
-    blocks_file = os.path.join(os.path.dirname(__file__), "textblock.txt")
-    with open(blocks_file, encoding="utf-8") as f:
-        lines = f.readlines()
-        lines = [ln.strip() for ln in lines if ln.strip()]
-        lines = ["jpcrp_cor:" + ln for ln in lines]
-        tag_name = ",".join(lines)
-    # tag_name = "jpcrp_cor:BusinessPolicyBusinessEnvironmentIssuesToAddressEtcTextBlock"
+    parser = argparse.ArgumentParser(
+                description="Extract target tag from xbrl files.")
+    parser.add_argument("--tag", type=str,
+                        default="OverviewOfBusinessResultsTextBlock",
+                        help="extract tag name")
+    parser.add_argument("--file", type=str,
+                        help="text file of tag list")
+
+    args = parser.parse_args()
+    # tag_name = "jpcrp_cor:OverviewOfBusinessResultsTextBlock"
+    tag_name = "jpcrp_cor:" + args.tag
+    if args.file:
+        blocks_file = os.path.join(os.path.dirname(__file__), args.file)
+        with open(blocks_file, encoding="utf-8") as f:
+            lines = f.readlines()
+            lines = [ln.strip() for ln in lines if ln.strip()]
+            lines = ["jpcrp_cor:" + ln for ln in lines]
+            tag_name = ",".join(lines)
 
     if not os.path.exists(EXTRACTED_FOLDER):
         # if folder is already exist, the file is overwrite/added to extracted folder
