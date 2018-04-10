@@ -21,25 +21,14 @@ The annotation target is "overview of business result" of each companies. Specif
 
 To see the detail definition, please refer [annotation guideline](https://github.com/chakki-works/chABSA-dataset/tree/master/annotation/doc).
 
-## Visualization
-
-comming soon!
-
-![demo1.png](./doc/demo1.png)
-
-![demo2.png](./doc/demo2.png)
-
-![demo3.png](./doc/demo3.png)
-
 ## Download the data
+
+[Download Link](https://storage.googleapis.com/chakki/datasets/public/chABSA/chABSA-dataset.zip)
 
 The 230 / 2,260 companies are annotated (10% of all company).  
 The annotation target companies are selected from each category. Please refer the detail from here.
 
 [Annotation Target](https://docs.google.com/spreadsheets/d/1i1y1Z5TwnKBOJ8fFLZ0D3p6dAG1zxYBRbUXumn0q10M/edit#gid=0)
-
-comming soon!
-
 
 ## Data organization
 
