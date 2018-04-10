@@ -30,6 +30,17 @@ The annotation target companies are selected from each category. Please refer th
 
 [Annotation Target](https://docs.google.com/spreadsheets/d/1i1y1Z5TwnKBOJ8fFLZ0D3p6dAG1zxYBRbUXumn0q10M/edit#gid=0)
 
+[Paper](https://github.com/chakki-works/chABSA-dataset/blob/master/doc/chabsa-aspect-based.pdf)
+
+
+## Jupyter Notebooks
+
+* [Dataset Statistics](https://github.com/chakki-works/chABSA-dataset/blob/master/notebooks/Dataset%20Statistics.ipynb)
+* [Baseline for Slot1 Task](https://github.com/chakki-works/chABSA-dataset/blob/master/notebooks/Baseline%20for%20Slot1.ipynb)
+* [Baseline for Slot2 Task](https://github.com/chakki-works/chABSA-dataset/blob/master/notebooks/Baseline%20for%20Slot2.ipynb)
+* [Baseline for Slot3 Task](https://github.com/chakki-works/chABSA-dataset/blob/master/notebooks/Baseline%20for%20Slot3.ipynb)
+
+
 ## Data organization
 
 ### Annotation Format
