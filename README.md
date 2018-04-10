@@ -35,15 +35,18 @@ The annotation target companies are selected from each category. Please refer th
 
 ## Jupyter Notebooks
 
+[You can try these on Kaggle Kernel!](https://www.kaggle.com/takahirokubo0/chabsa)
+
 * [Dataset Statistics](https://github.com/chakki-works/chABSA-dataset/blob/master/notebooks/Dataset%20Statistics.ipynb)
 * [Baseline for Slot1 Task](https://github.com/chakki-works/chABSA-dataset/blob/master/notebooks/Baseline%20for%20Slot1.ipynb)
 * [Baseline for Slot2 Task](https://github.com/chakki-works/chABSA-dataset/blob/master/notebooks/Baseline%20for%20Slot2.ipynb)
 * [Baseline for Slot3 Task](https://github.com/chakki-works/chABSA-dataset/blob/master/notebooks/Baseline%20for%20Slot3.ipynb)
 
-
 ## Data organization
 
 ### Annotation Format
+
+[Annotation Tools is available here](https://github.com/chakki-works/chABSA-dataset/tree/master/annotation)
 
 Annotation result is provided by json file.
 
