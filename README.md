@@ -23,7 +23,7 @@ To see the detail definition, please refer [annotation guideline](https://github
 
 ## Download the data
 
-[Download Link](https://storage.googleapis.com/chakki/datasets/public/chABSA/chABSA-dataset.zip)
+[Download Link](https://s3-ap-northeast-1.amazonaws.com/dev.tech-sketch.jp/chakki/public/chABSA-dataset.zip)
 
 The 230 / 2,260 companies are annotated (10% of all company).  
 The annotation target companies are selected from each category. Please refer the detail from here.
