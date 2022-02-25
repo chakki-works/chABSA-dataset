@@ -174,6 +174,6 @@ def main():
 if __name__ == "__main__":
     if not os.path.exists(EXTRACTED_DATA_DIR):
         # if folder is already exist, the file is overwrite/added to extracted folder
-        os.mkdir(EXTRACTED_FOLDER)
+        os.mkdir(EXTRACTED_DATA_DIR)
 
     main()
