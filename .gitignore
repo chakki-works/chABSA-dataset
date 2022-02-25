@@ -107,3 +107,4 @@ venv.bak/
 data/
 .vscode/
 notebooks/*.vec
+.idea
